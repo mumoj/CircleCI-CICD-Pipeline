@@ -15,8 +15,8 @@ jobs:
             npm install
             npm run build
       - save_cache:
-          paths: [frontend/node_modules]
-          key: frontend-build
+        paths: [frontend/node_modules]
+        key: frontend-build
 
   build-backend:
     docker:
@@ -43,10 +43,10 @@ jobs:
       - restore_cache:
           keys: [frontend-test]
 
-     - run:
+      - run:
           name: Test front-end
           command: |
-            cd fronted
+            cd frontend
             npm install
             npm run test
               
@@ -56,11 +56,11 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backed-test]
+          keys: [backend-test]
       - run:
           name: Test back-end
           command: |
-            cd backenf
+            cd backend
             npm install
             npm run test
 
