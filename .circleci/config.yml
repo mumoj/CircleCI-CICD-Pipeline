@@ -116,6 +116,7 @@ workflows:
       - scan-frontend:
           requires: [test-frontend]
       - scan-backend:
+          context: slack-notifications
           requires: [test-backend]
 
         
