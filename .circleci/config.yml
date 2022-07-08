@@ -109,6 +109,14 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+
+      - run:
+         name: Install archiving tools
+         command:  |
+            cat /etc/os-release
+            cat /etc/issue
+            
+
       - run:
           name: Ensure back-end infrastructure exists
           command: |
