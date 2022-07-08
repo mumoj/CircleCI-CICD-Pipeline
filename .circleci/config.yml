@@ -111,11 +111,9 @@ jobs:
       - checkout
 
       - run:
-         name: Install archiving tools
-         command:  |
-            cat /etc/os-release
-            cat /etc/issue
-            
+          name: Install archiving tools
+          command:  |
+            yum install -y tar gzip
 
       - run:
           name: Ensure back-end infrastructure exists
@@ -144,7 +142,13 @@ jobs:
           root: ~/
           paths:
             - cdond-c3-projectstarter/.circleci/ansible/inventory.txt
-  
+
+      - run:
+          destroy_environment:
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
 workflows:
   default:
