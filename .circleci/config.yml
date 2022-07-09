@@ -138,12 +138,13 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> inventory.txt
             cat inventory.txt
+            whoami
             ls
    
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
 
       - run:
           destroy_environment:
