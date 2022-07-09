@@ -182,6 +182,8 @@ jobs:
             ls -a
             apk add --update ansible
             apk add tar gzip
+            pip install awscli
+            aws --version
 
       - run:
           name: Configure server
@@ -213,11 +215,7 @@ jobs:
             then
               curl https://kvdb.io/3K9Z7MznMiYY9eiXg9CmbC/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-            
-      - destroy-environment:
-          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
- 
+
 workflows:
   default:
     jobs:
