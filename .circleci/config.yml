@@ -138,8 +138,13 @@ jobs:
             aws ec2 describe-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text >> inventory.txt
+
+      -run:
+          name: Container File Structure
+          commmand: |
+            ls
             cat inventory.txt
-   
+
       - persist_to_workspace:
           root: ~/
           paths:
@@ -172,7 +177,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            cd project/.circleci/ansible
+            cd .circleci/ansible
             ansible-playbook -i inventory.txt configure-server.yml
 
 workflows:
