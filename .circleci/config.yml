@@ -139,12 +139,12 @@ jobs:
             --output text >> inventory.txt
             cat inventory.txt
             whoami
-            ls
+            ls -a
    
       - persist_to_workspace:
           root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
 
       - run:
           destroy_environment:
@@ -162,7 +162,7 @@ jobs:
           fingerprints: ["d5:98:fa:31:0c:96:19:c7:1a:d3:34:2d:3d:4f:c0:43"]
 
       - attach_workspace:
-          at: ~/.circleci/ansible
+          at: ~/
 
       - run:
           name: Install dependencies
