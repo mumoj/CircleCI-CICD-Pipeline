@@ -203,6 +203,10 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
+      
+      - restore_cache:
+          keys: [backend-build]
+
       - run:
           name: Install Dependacies
           command: |
@@ -210,7 +214,6 @@ jobs:
             sudo apt-get install awscli
             sudo apt-get update && sudo apt-get install -y ca-certificates
             aws --version
-
       - run:
           name: Run migrations
           command: |
