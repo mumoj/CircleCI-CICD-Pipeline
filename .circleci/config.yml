@@ -3,6 +3,23 @@ version: 2.1
 orbs: 
   slack: circleci/slack@4.10.1
 
+commands:
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      backend_stack:
+        type: string
+      frontend_stack:
+        type: string
+
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name <<parameters.backend_stack>>
+            aws cloudformation delete-stack --stack-name <<parameters.frontend_stack>>
+
 jobs:
   build-frontend:
     docker:
@@ -144,13 +161,10 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
 
-      - run:
-          destroy_environment:
-          when: on_fail
-          command: |
-            aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-            aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
-
+      - destroy-environment:
+          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+      
   configure-infrastructure: 
     docker:
       - image: python:3.7-alpine3.11
@@ -177,7 +191,9 @@ jobs:
             ls -a
             ansible all --list-hosts
             ansible-playbook -i inventory.txt configure-server.yml
- # Here's where you will add some code to rollback on failure 
+      - destroy-environment:
+          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"  
 
   run-migrations:
     docker:
@@ -197,6 +213,10 @@ jobs:
             then
               curl https://kvdb.io/3K9Z7MznMiYY9eiXg9CmbC/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
+            
+      - destroy-environment:
+          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
  
 workflows:
   default:
