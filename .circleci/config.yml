@@ -109,7 +109,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-
       - run:
           name: Install archiving tools
           command:  |
@@ -143,6 +142,7 @@ jobs:
    
       - persist_to_workspace:
           root: ~/
+          paths:
             - project/.circleci/ansible/inventory.txt
 
       - run:
