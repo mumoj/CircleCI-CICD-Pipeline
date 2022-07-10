@@ -26,7 +26,9 @@
 - name: "install node_13 and npm"
   become: true
   ansible.builtin.apt:
-    name: nodejs=13.8.0
+    name: n
+      - nodejs
+      - npm
     update_cache: true
 
 - name: "install pm2"
