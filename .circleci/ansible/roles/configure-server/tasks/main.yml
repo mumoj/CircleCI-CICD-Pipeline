@@ -2,33 +2,32 @@
 
 - name: "Upgrade packages."
   become: true
-  apt:
+  ansible.builtin.apt:
     upgrade: "yes"
 
-- name: Add Nodesource Keys
+- name: "Add Nodesource Keys"
   become: true
-  apt_key:
+  ansible.builtin.apt_key:
     url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
     state: present
 
-- name: Add Nodesource Apt Sources
+- name: "Add Nodesource Apt Sources"
   become: true
-  apt_repository:
-    repo: '{{ item }}'
+  ansible.builtin.apt_repository:
+    repo: 'deb https://deb.nodesource.com/node_13.x focal main'
     state: present
-  with_items:
-    - 'deb https://deb.nodesource.com/node_13.x focal main'
-    - 'deb-src https://deb.nodesource.com/node_13.x focal main'
 
-- name: "Install NodeJS and NPM"
+- name: "NodeJS Dependancies"
   become: true
-  apt:
-    name: '{{ item }}'
-    state: latest
+  ansible.builtin.apt:
+    name: libssl1.1=1.1.1f-1ubuntu2
     update_cache: true
-  with_items:
-    - nodejs
-    - npm
+
+- name: "install node_13 and npm"
+  become: true
+  ansible.builtin.apt:
+    name: nodejs=13.8.0
+    update_cache: true
 
 - name: "install pm2"
   become: true
