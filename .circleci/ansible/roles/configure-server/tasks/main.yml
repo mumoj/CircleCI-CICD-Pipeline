@@ -1,16 +1,34 @@
 ---
 
-- name: "upgrade packages."
+- name: "Upgrade packages."
   become: true
   apt:
     upgrade: "yes"
 
-- name: "install dependencies."
+- name: Add Nodesource Keys
+  become: true
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: Add Nodesource Apt Sources
+  become: true
+  apt_repository:
+    repo: '{{ item }}'
+    state: present
+  with_items:
+    - 'deb https://deb.nodesource.com/node_13.x focal main'
+    - 'deb-src https://deb.nodesource.com/node_13.x focal main'
+
+- name: "Install NodeJS and NPM"
   become: true
   apt:
-    name: ["nodejs", "npm"]
+    name: '{{ item }}'
     state: latest
     update_cache: true
+  with_items:
+    - nodejs
+    - npm
 
 - name: "install pm2"
   become: true
