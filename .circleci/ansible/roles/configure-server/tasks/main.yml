@@ -27,7 +27,6 @@
   become: true
   ansible.builtin.apt:
     name: ["nodejs", "npm"]
-    state: present
     update_cache: true
 
 - name: "install pm2"
