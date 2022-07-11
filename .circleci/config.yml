@@ -20,6 +20,23 @@ commands:
             aws cloudformation delete-stack --stack-name <<parameters.backend_stack>>
             aws cloudformation delete-stack --stack-name <<parameters.frontend_stack>>
 
+  # revert-migrations:
+  #   description: Revert the last migration if successfully run in the current workflow.
+  #   parameters:
+  #     workflow_id:
+  #       type:string
+  #   steps:
+  #     - run:
+  #         name: Revert migrations
+  #         command: |
+  #             SUCCESS=$(curl --insecure https://kvdb.io/EUAJuVP5WS2Xs3i5N5Tsp4/migration_8dd08))); 
+  #             if(( $SUCCESS==1 ))
+  #             then
+  #               cd ~/project/backend
+                
+  #             exit 1
+  #           fi
+
 jobs:
   build-frontend:
     docker:
@@ -27,7 +44,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-build]
+          keys: [frontend-build1]
       - run:
           name: Build front-end
           command: |
@@ -37,7 +54,7 @@ jobs:
 
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-build 
+          key: frontend-build1 
         
 
   build-backend:
@@ -46,7 +63,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build1]
       - run:
           name: Build backed-end
           command: |
@@ -55,7 +72,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-build
+          key: backend-build1
 
   test-frontend:
     docker:
@@ -205,7 +222,7 @@ jobs:
       - checkout
       
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build1]
 
       - run:
           name: Install Dependacies
@@ -226,9 +243,8 @@ jobs:
             cat ~/project/backend/migrations_dump.txt
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/3K9Z7MznMiYY9eiXg9CmbC/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl https://kvdb.io/4GcxyZe9nkBV3BtHEtUrMe/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
