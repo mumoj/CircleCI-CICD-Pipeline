@@ -251,20 +251,21 @@ jobs:
 
   deploy-frontend:
     docker:
-      - image: amazon/aws-cli 
+      - image: circleci/node:13.8.0
     steps:
       - checkout
 
       - run:
-          name: Install npm and node
+          name: Install awscli
           command: |
-            curl -sL https://rpm.nodesource.com/setup_13.x | sudo bash -  
-            sudo yum install -y nodejs
+            sudo apt-get update
+            sudo apt-get install -y awscli
+            aws --version
 
       - run:
           name: Install archiving tools
           command: |
-            yum install -y  tar gzip
+            sudo apt-get update && sudo apt-get install -y  tar gzip
             
       - attach_workspace:
           at: ~/  
