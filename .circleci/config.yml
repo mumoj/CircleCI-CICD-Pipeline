@@ -255,9 +255,6 @@ jobs:
     steps:
       - checkout
 
-      - attach_workspace:
-          at: ~/  
-
       - run:
           name: Install npm and node
           command: |
@@ -268,6 +265,9 @@ jobs:
           name: Install archiving tools
           command: |
             yum install -y  tar gzip
+            
+      - attach_workspace:
+          at: ~/  
 
       - run:
           name: Get backend url
