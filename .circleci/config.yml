@@ -321,7 +321,6 @@ jobs:
             tar -C backend -czvf artifact.tar.gz .
             echo "Confirm archive -------"
             ls -a
-            pwd
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
