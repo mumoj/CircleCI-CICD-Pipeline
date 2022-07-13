@@ -55,8 +55,7 @@ jobs:
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
-        
-
+       
   build-backend:
     docker:
       - image: circleci/node:13.8.0
@@ -220,10 +219,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      
       - restore_cache:
           keys: [backend-build]
-
       - run:
           name: Install Dependacies
           command: |
@@ -292,12 +289,14 @@ jobs:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
 
-  - deploy-backend:
+  deploy-backend:
     docker:
       - image: node:13.8.0
     steps:
+      - checkout
+
       - add_ssh_keys:
-        fingerprints: ["4e:50:44:b3:07:9a:51:68:94:8a:56:f2:a5:15:79:0d"]
+          fingerprints: ["4e:50:44:b3:07:9a:51:68:94:8a:56:f2:a5:15:79:0d"]
 
       - run:
           name: Install dependencies
