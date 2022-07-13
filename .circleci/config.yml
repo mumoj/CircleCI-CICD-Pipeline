@@ -292,6 +292,43 @@ jobs:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
 
+  - deploy-backend:
+    docker:
+      - image: node:13.8.0
+    steps:
+      - add_ssh_keys:
+        fingerprints: ["4e:50:44:b3:07:9a:51:68:94:8a:56:f2:a5:15:79:0d"]
+
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            sudo apt install -y ansible
+            sudo apt-get install -y  tar gzip
+            sudo apt-get install -y awscli
+            aws --version
+      - attach_workspace:
+          at: ~/
+
+      - run:
+          name: Deploy backend
+          command: |
+            cd backend
+            npm i
+            npm run build
+            cd ..
+
+            # Zip the directory
+            tar -C backend -czvf artifact.tar.gz .
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+
+      - destroy-environment:
+          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"  
+
 workflows:
   default:
     jobs:
@@ -316,6 +353,8 @@ workflows:
       - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
           requires: [run-migrations]
 
         
