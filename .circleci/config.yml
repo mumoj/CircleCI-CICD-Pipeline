@@ -317,7 +317,9 @@ jobs:
             npm run build
             cd ..
             ls -a
+            echo "CHECK FILE PATH -------"
             pwd
+            echo "---------------------------"
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             echo "Confirm archive -------"

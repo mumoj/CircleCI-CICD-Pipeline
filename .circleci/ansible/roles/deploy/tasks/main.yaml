@@ -2,7 +2,7 @@
 - name: "Move backend files to web server"
   become_user: ubuntu
   copy:
-    src: /root/project/artifact.tar.gz
+    src: /../../artifact.tar.gz
     dest: "~/backend"
     owner: ubuntu
     group: ubuntu
