@@ -2,15 +2,15 @@
 - name: "Move backend files to web server"
   become_user: ubuntu
   copy:
-    src: /../../artifact.tar.gz
-    dest: "~/backend"
+    src: /home/circleci/project/artifact.tar.gz
+    dest: "~/backend/"
     owner: ubuntu
     group: ubuntu
     mode: 0644
 
 - name: "Check for the tar file"
   become_user: ubuntu
-  command: ls -l ~/
+  command: ls -l ~/backend
 
 - name: "Unzip backend files"
   become: true
