@@ -327,7 +327,6 @@ jobs:
             echo TYPEORM_PASSWORD=WdCdmxP9738PoV >> ~/backend/.env
             echo TYPEORM_PORT=5432 >> ~/backend/.env
             echo TYPEORM_USERNAME=postgres >> ~/backend/.env
-
       - run:
           name: Deploy backend
           command: |
