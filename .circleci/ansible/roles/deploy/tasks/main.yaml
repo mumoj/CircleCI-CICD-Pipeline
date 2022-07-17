@@ -1,15 +1,15 @@
 ---
 - name: "Move backend files to web server"
-  become_user: ubuntu
+  become: true
   copy:
     src: /home/circleci/project/artifact.tar.gz
     dest: "~/backend/"
     owner: ubuntu
     group: ubuntu
-    mode: 0644
+    mode: 0777
 
 - name: "Check for the tar file"
-  become_user: ubuntu
+  become: true
   command: ls -l ~/backend
 
 - name: "Unzip backend files"
@@ -24,6 +24,6 @@
   shell: >
     pwd
     cd /home/ubuntu/backend
-    npm install
-    pm2 stop default
-    pm2 start npm -- start
+    sudo npm install
+    sudo pm2 stop default
+    sudo pm2 start npm -- start
