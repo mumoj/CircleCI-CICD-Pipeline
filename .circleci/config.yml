@@ -315,19 +315,19 @@ jobs:
           at: ~/
 
       - run:
-        name: create .env file
-        command: |
-          cd backend
-          touch .env
-          export ENVFILE=/home/circleci/project/backend/.env
-          echo TYPEORM_DATABASE=postgres > $ENVFILE
-          echo TYPEORM_ENTITIES=/home/ubuntu/backend/src/modules/domain/**/*.entity.ts > $ENVFILE
-          echo TYPEORM_HOST=database-2.cb5nbzqyh6zq.us-east-1.rds.amazonaws.com >  $ENVFILE
-          echo TYPEORM_MIGRATIONS=/home/ubuntu/backend/src/migrations/*.ts > $ENVFILE
-          echo TYPEORM_MIGRATIONS_DIR=/home/ubuntu/backend/src/migrations/ > $ENVFILE
-          echo TYPEORM_PASSWORD=WdCdmxP9738PoV > $ENVFILE
-          echo TYPEORM_PORT=5432 > $ENVFILE
-          echo TYPEORM_USERNAME=postgres > $ENVFILE
+          name: create .env file
+          command: |
+            cd backend/
+            touch .env
+            export ENVFILE=~/backend/.env
+            echo TYPEORM_DATABASE=postgres > $ENVFILE
+            echo TYPEORM_ENTITIES=/home/ubuntu/backend/src/modules/domain/**/*.entity.ts > $ENVFILE
+            echo TYPEORM_HOST=database-2.cb5nbzqyh6zq.us-east-1.rds.amazonaws.com >  $ENVFILE
+            echo TYPEORM_MIGRATIONS=/home/ubuntu/backend/src/migrations/*.ts > $ENVFILE
+            echo TYPEORM_MIGRATIONS_DIR=/home/ubuntu/backend/src/migrations/ > $ENVFILE
+            echo TYPEORM_PASSWORD=WdCdmxP9738PoV > $ENVFILE
+            echo TYPEORM_PORT=5432 > $ENVFILE
+            echo TYPEORM_USERNAME=postgres > $ENVFILE
 
       - run:
           name: Deploy backend
