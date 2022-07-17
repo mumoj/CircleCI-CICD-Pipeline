@@ -317,7 +317,9 @@ jobs:
       - run:
         name: create .env file
         command: |
-          echo TYPEORM_DATABASE=postgres > ~/backend/.env
+          pwc
+          cat TYPEORM_DATABASE=postgres > ~/backend/.env
+          cat ~/backend/.env
           echo TYPEORM_ENTITIES=/home/ubuntu/backend/src/modules/domain/**/*.entity.ts >> ~/backend/.env
           echo TYPEORM_HOST=database-2.cb5nbzqyh6zq.us-east-1.rds.amazonaws.com >> ~/backend/.env
           echo TYPEORM_MIGRATIONS=/home/ubuntu/backend/src/migrations/*.ts >> ~/backend/.env
