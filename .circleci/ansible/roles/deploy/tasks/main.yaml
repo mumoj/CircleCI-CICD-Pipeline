@@ -27,3 +27,14 @@
     sudo npm install
     sudo pm2 stop default
     sudo pm2 start npm -- start
+    
+  environment: 
+    - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
+    - TYPEORM_ENTITIES: "/home/ubuntu/backend/src/modules/domain/**/*.entity.ts"
+    - TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
+    - TYPEORM_PORT: 5432
+    - TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
+    - TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
+    - TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
+    - TYPEORM_MIGRATIONS: "/home/ubuntu/backend/src/migrations/*.ts"
+    - TYPEORM_MIGRATIONS_DIR: "/home/ubuntu/backend/src/migrations/"
