@@ -318,6 +318,7 @@ jobs:
           name: create .env file
           command: |
             pwd
+            ls -a
             echo TYPEORM_DATABASE=postgres > ~/backend/project/.env
             cat ~/backend/project/.env
             echo TYPEORM_ENTITIES=/home/ubuntu/backend/src/modules/domain/**/*.entity.ts >> ~/backend/project/.env
