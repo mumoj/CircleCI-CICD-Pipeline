@@ -313,7 +313,7 @@ jobs:
             aws --version
       - attach_workspace:
           at: ~/
-
+          
       - run:
           name: Deploy backend
           command: |
@@ -332,7 +332,7 @@ jobs:
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -v -i inventory.txt deploy-backend.yml
 
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
