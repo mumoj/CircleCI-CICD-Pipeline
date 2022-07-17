@@ -319,15 +319,15 @@ jobs:
           command: |
             pwd
             ls -a
-            echo TYPEORM_DATABASE=postgres > ~/backend/project/.env
-            cat ~/backend/project/.env
-            echo TYPEORM_ENTITIES=/home/ubuntu/backend/src/modules/domain/**/*.entity.ts >> ~/backend/project/.env
-            echo TYPEORM_HOST=database-2.cb5nbzqyh6zq.us-east-1.rds.amazonaws.com >> ~/backend/project/.env
-            echo TYPEORM_MIGRATIONS=/home/ubuntu/backend/src/migrations/*.ts >> ~/backend/project/.env
-            echo TYPEORM_MIGRATIONS_DIR=/home/ubuntu/backend/src/migrations/ >> ~/backend/project/.env
-            echo TYPEORM_PASSWORD=WdCdmxP9738PoV >> ~/backend/project/.env
-            echo TYPEORM_PORT=5432 >> ~/backend/project/.env
-            echo TYPEORM_USERNAME=postgres >> ~/backend/project/.env
+            echo TYPEORM_DATABASE=postgres > ~/project/backend/.env
+            cat ~/project/backend/.env
+            echo TYPEORM_ENTITIES=/home/ubuntu/backend/src/modules/domain/**/*.entity.ts >> ~/project/backend/.env
+            echo TYPEORM_HOST=database-2.cb5nbzqyh6zq.us-east-1.rds.amazonaws.com >> ~/project/backend/.env
+            echo TYPEORM_MIGRATIONS=/home/ubuntu/backend/src/migrations/*.ts >> ~/project/backend/.env
+            echo TYPEORM_MIGRATIONS_DIR=/home/ubuntu/backend/src/migrations/ >> ~/project/backend/.env
+            echo TYPEORM_PASSWORD=WdCdmxP9738PoV >> ~/project/backend/.env
+            echo TYPEORM_PORT=5432 >> ~/project/backend/.env
+            echo TYPEORM_USERNAME=postgres >> ~/project/backend/.env
       - run:
           name: Deploy backend
           command: |
