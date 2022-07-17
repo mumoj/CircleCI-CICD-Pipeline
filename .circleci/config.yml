@@ -28,17 +28,16 @@ commands:
 
     steps:
       - run:
-        name: Revert migrations
-        when: on_fail
-        command: |
-          SUCCESS=$(curl --insecure  https://kvdb.io/4GcxyZe9nkBV3BtHEtUrMe/migration_<< parameters.workflow_id >>)
-          if (( $SUCCESS == 1 ));
-          then
-            cd ~/project/backend
-            npm install
-            npm run migration:revert
-          fi
-         
+          name: Revert migrations
+          when: on_fail
+          command: |
+            SUCCESS=$(curl --insecure  https://kvdb.io/4GcxyZe9nkBV3BtHEtUrMe/migration_<< parameters.workflow_id >>)
+            if (( $SUCCESS == 1 ));
+            then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
+            fi
 jobs:
   build-frontend:
     docker:
@@ -64,7 +63,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build1]
       - run:
           name: Build backed-end
           command: |
@@ -222,7 +221,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-build]
+          keys: [backend-build1]
       - run:
           name: Install Dependacies
           command: |
@@ -246,7 +245,9 @@ jobs:
             fi
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
 
   deploy-frontend:
     docker:
@@ -289,7 +290,9 @@ jobs:
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
 
   deploy-backend:
     docker:
@@ -333,7 +336,9 @@ jobs:
 
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"  
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
 
 workflows:
   default:
