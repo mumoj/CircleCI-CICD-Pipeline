@@ -3,28 +3,29 @@
   become: true
   copy:
     src: /home/circleci/project/artifact.tar.gz
-    dest: "~/backend/"
+    dest: "/srv/udapeople/"
     owner: ubuntu
     group: ubuntu
     mode: 0777
 
 - name: "Check for the tar file"
   become: true
-  command: ls -l ~/backend
+  command: ls /srv/udapeople/
 
 - name: "Unzip backend files"
   become: true
   shell: |
-    cd /home/ubuntu/backend
+    cd /srv/udapeople/
     tar xvzf artifact.tar.gz
     rm -rf artifact.tar.gz
 
 - name: "start server"
   become: true
   shell: >
+    cd /srv/udapeople/
     npm install
-    sudo pm2 stop default
-    sudo pm2 start npm -- start
+    pm2 stop default
+    pm2 start npm -- start
 
   environment: 
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
