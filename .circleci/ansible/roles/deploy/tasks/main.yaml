@@ -3,37 +3,37 @@
   become: true
   copy:
     src: /home/circleci/project/artifact.tar.gz
-    dest: "/srv/udapeople/"
+    dest: "/srv/backend/"
     owner: ubuntu
     group: ubuntu
     mode: 0777
 
 - name: "Check for the tar file"
   become: true
-  command: ls /srv/udapeople/
+  command: ls /srv/backend/
 
 - name: "Unzip backend files"
   become: true
   shell: |
-    cd /srv/udapeople/
+    cd /srv/backend/
     tar xvzf artifact.tar.gz
     rm -rf artifact.tar.gz
+
+- name: "Echo Env Variables"
+  become: true
+  shell: |
+    echo "The Host : ${TYPEORM_HOST}" 
+
+- name: "Second variables Check"
+  become: true
+  command: env
 
 - name: "start server"
   become: true
   shell: >
-    cd /srv/udapeople/
+    env
+    cd /srv/backend/
     npm install
     pm2 stop default
     pm2 start npm -- start
 
-  environment: 
-    - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"
-    - TYPEORM_ENTITIES: "/home/ubuntu/backend/src/modules/domain/**/*.entity.ts"
-    - TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
-    - TYPEORM_PORT: 5432
-    - TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME')}}"
-    - TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD')}}"
-    - TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE')}}"
-    - TYPEORM_MIGRATIONS: "/home/ubuntu/backend/src/migrations/*.ts"
-    - TYPEORM_MIGRATIONS_DIR: "/home/ubuntu/backend/src/migrations/"
