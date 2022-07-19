@@ -371,6 +371,11 @@ jobs:
             else
               return 1
             fi
+      - destroy-environment:
+          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 workflows:
   default:
