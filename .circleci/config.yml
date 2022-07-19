@@ -314,20 +314,12 @@ jobs:
       - attach_workspace:
           at: ~/
 
-      - run:
-          name: create .env file
-          command: |
-            pwd
-            ls -a
-            echo TYPEORM_DATABASE=postgres > ~/project/backend/.env
-            cat ~/project/backend/.env
-            echo TYPEORM_ENTITIES=/home/ubuntu/backend/src/modules/domain/**/*.entity.ts >> ~/project/backend/.env
-            echo TYPEORM_HOST=database-2.cb5nbzqyh6zq.us-east-1.rds.amazonaws.com >> ~/project/backend/.env
-            echo TYPEORM_MIGRATIONS=/home/ubuntu/backend/src/migrations/*.ts >> ~/project/backend/.env
-            echo TYPEORM_MIGRATIONS_DIR=/home/ubuntu/backend/src/migrations/ >> ~/project/backend/.env
-            echo TYPEORM_PASSWORD=WdCdmxP9738PoV >> ~/project/backend/.env
-            echo TYPEORM_PORT=5432 >> ~/project/backend/.env
-            echo TYPEORM_USERNAME=postgres >> ~/project/backend/.env
+      # - run:
+      #     name: create .env file
+      #     command: |
+      #       pwd
+      #       ls -a
+
       - run:
           name: Deploy backend
           command: |
@@ -348,11 +340,11 @@ jobs:
             cat inventory.txt
             ansible-playbook -v -i inventory.txt deploy-backend.yml
 
-      - destroy-environment:
-          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
-      - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+      # - destroy-environment:
+      #     frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+      #     backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+      # - revert-migrations:
+      #     workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
 
   smoke-test:
     docker:
