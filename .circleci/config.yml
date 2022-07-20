@@ -346,9 +346,10 @@ jobs:
     steps:
       - checkout
 
-      - run: Sleep 2 minutes for server set up
-        command: |
-          sleep 2m
+      - run:
+          name: Sleep 2 minutes for server set up
+          command: |
+            sleep 2m
 
       - run:
           name: Get backend url
