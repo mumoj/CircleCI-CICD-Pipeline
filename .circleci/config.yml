@@ -358,6 +358,7 @@ jobs:
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --output text) 
             export API_URL="http://${BACKEND_IP}:3030"
+            
 
             if curl --insecure "${API_URL}/api/status" | grep "ok"
             then
@@ -365,6 +366,7 @@ jobs:
             else
               exit 1
             fi
+
       - run:
           name: Frontend smoke test.
           command: |
@@ -372,10 +374,11 @@ jobs:
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-              return 1
+              exit 0
             else
-              return 1
+              exit 1
             fi
+            
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
