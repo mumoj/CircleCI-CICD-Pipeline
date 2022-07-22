@@ -1,0 +1,43 @@
+---
+- name: "Move backend files to web server"
+  become: true
+  copy:
+    src: /home/circleci/project/artifact.tar.gz
+    dest: "/srv/backend/"
+    owner: ubuntu
+    group: ubuntu
+    mode: 0777
+
+- name: "Check for the tar file"
+  become: true
+  command: ls /srv/backend/
+
+- name: "Unzip backend files"
+  become: true
+  shell: |
+    cd /srv/backend/
+    tar xvzf artifact.tar.gz
+
+- name: "Delete tar.gz"
+  become: true
+  shell: |
+    cd /srv/backend/
+    rm -rf artifact.tar.gz
+
+- name: "Echo Env Variables"
+  become: true
+  command: env 
+
+- name: "Second variables Check"
+  become: true
+  shell: |
+    env
+
+- name: "start server"
+  become: true
+  shell: |
+    cd /srv/backend/
+    npm install
+    pm2 stop default
+    pm2 start npm -- start
+
