@@ -235,7 +235,7 @@ jobs:
           command: |
             cd backend
             npm install
-            npm run migration:revert
+            npm run migrations:revert
 
       - run:
           name: Run migrations
