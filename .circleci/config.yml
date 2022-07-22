@@ -37,7 +37,7 @@ commands:
               cd ~/project/backend
               npm install
               npm run migrations:revert
-            fi
+            fi   
 jobs:
   build-frontend:
     docker:
@@ -401,6 +401,34 @@ jobs:
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
+  cloudfront-update:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+
+      - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            sudo apt-get install -y awscli
+            aws --version
+
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
+            --parameter-overrides WorkflowID="udapeople-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople 
+
+      - destroy-environment:
+          frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
+               
 workflows:
   default:
     jobs:
