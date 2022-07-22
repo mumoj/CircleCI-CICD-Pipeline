@@ -388,11 +388,11 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
+      - build-frontend:
           filters:
             branches:
               only: [dev-branch]
-      - build-backend
+      - build-backend:
           filters:
             branches:
               only: [dev-branch]
@@ -429,7 +429,7 @@ workflows:
               only: [master]
       - run-migrations:
           requires: [configure-infrastructure]
-           filters:
+          filters:
             branches:
               only: [master]
       - deploy-frontend:
