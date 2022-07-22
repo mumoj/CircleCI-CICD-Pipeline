@@ -391,11 +391,11 @@ workflows:
       - build-frontend:
           filters:
             branches:
-              only: [dev-branch]
+              only: [dev-branch, test-feature-branch]
       - build-backend:
           filters:
             branches:
-              only: [dev-branch]
+              only: [dev-branch, test-feature-branch]
       - test-frontend: 
           requires: [build-frontend]
           filters:
