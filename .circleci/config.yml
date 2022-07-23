@@ -410,9 +410,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            sudo apt update
-            sudo apt install -y awscli
-            sudo apt upgrade -y awscli
+            sudo apt-get remove awscli
+            sudo pip install -U awscli
+            source ~/.bashrc
             aws --version
 
       - run:
