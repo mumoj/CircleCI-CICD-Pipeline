@@ -11,12 +11,15 @@ commands:
         type: string
       frontend_stack:
         type: string
+      workflow_id:
+        type: string
 
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
+            aws s3 rm "s3://udapeople-<< parameters.workflow_id >> --recursive
             aws cloudformation delete-stack --stack-name <<parameters.backend_stack>>
             aws cloudformation delete-stack --stack-name <<parameters.frontend_stack>>
 
@@ -180,7 +183,8 @@ jobs:
 
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
       
   configure-infrastructure: 
     docker:
@@ -213,7 +217,8 @@ jobs:
 
       - destroy-environment:
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"  
+          backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
   run-migrations:
     docker:
@@ -253,10 +258,11 @@ jobs:
               curl --insecure https://kvdb.io/4GcxyZe9nkBV3BtHEtUrMe/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+           
 
   deploy-frontend:
     docker:
@@ -298,6 +304,7 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
@@ -344,6 +351,7 @@ jobs:
             ansible-playbook -v -i inventory.txt deploy-backend.yml
 
       - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
       - revert-migrations:
@@ -396,6 +404,7 @@ jobs:
             fi
             
       - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
       - revert-migrations:
@@ -427,43 +436,70 @@ jobs:
             --tags project=udapeople 
 
       - destroy-environment:
+          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
           frontend_stack: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
           backend_stack:  "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" 
       - revert-migrations:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"  
-               
+
+  cleanup:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout:
+          
+      - run:
+          name: Get old stack workflow id
+          command: |
+            # Fetch the Old workflow ID
+            export OldWorkflowID=$(aws cloudformation \
+            list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+            --no-paginate --output text)
+            echo OldWorkflowID: "${OldWorkflowID}"
+            echo CIRCLE_WORKFLOW_ID "${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Remove old stacks and files
+          command: |
+            if [[ "${CIRCLE_WORKFLOW_ID:0:7}" =~ "${OldWorkflowID}" ]]
+            then
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
+            else
+              echo Cannot Clean up."
+            fi             
 workflows:
   default:
     jobs:
       - build-frontend:
           filters:
             branches:
-              only: [master]
+              only: [dev-branch]
       - build-backend:
           filters:
             branches:
-              only: [master]
+              only: [dev-branch]
       - test-frontend: 
           requires: [build-frontend]
           filters:
             branches:
-              only: [master]
+              only: [dev-branch]
       - test-backend:
           requires: [build-backend]
           filters:
             branches:
-              only: [master]
+              only: [dev-branch]
       - scan-frontend:
           requires: [build-frontend]
           filters:
             branches:
-              only: [master]
+              only: [dev-branch]
       - scan-backend:
           context: slack-notifications
           requires: [build-backend]
           filters:
             branches:
-              only: [master]
+              only: [dev-branch]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
