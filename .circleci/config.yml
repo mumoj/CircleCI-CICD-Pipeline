@@ -468,35 +468,23 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend:
-          filters:
-            branches:
-              only: [master]
-      - build-backend:
-          filters:
-            branches:
-              only: [master]
+      - build-frontend
+
+      - build-backend
+ 
       - test-frontend: 
           requires: [build-frontend]
-          filters:
-            branches:
-              only: [master]
+
       - test-backend:
           requires: [build-backend]
-          filters:
-            branches:
-              only: [master]
+
       - scan-frontend:
           requires: [build-frontend]
-          filters:
-            branches:
-              only: [master]
+
       - scan-backend:
           context: slack-notifications
           requires: [build-backend]
-          filters:
-            branches:
-              only: [master]
+
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
           filters:
@@ -529,6 +517,14 @@ workflows:
               only: [master]
       - cloudfront-update:
           requires: [smoke-test]
+          filters:
+            branches:
+              only: [master]
+      - cleanup:
+          requires: [cloudfront-update]
+          filters:
+            branches:
+              only: [master]
 
         
 
