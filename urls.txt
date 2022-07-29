@@ -1,2 +1,0 @@
-[URL01] https://github.com/mumoj/cdond-c3-projectstarter 
-[URL02] http://udapeople-b53f400.s3-website-us-east-1.amazonaws.com/#/employees
